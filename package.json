@@ -1,9 +1,9 @@
 {
+  "homepage": "https://cudid-ezman.github.io/Qur-an-WEB-API-",
   "name": "my-quran",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
-  "homepage": "https://cudid-ezman.github.io/Qur-an-WEB-API-",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
