@@ -1,23 +1,23 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import parse from "html-react-parser";
 
 const DetailSurat = () => {
-  const { id } = useParams(); // Mengambil nomor surat dari URL
+  const { id } = useParams();
   const [surat, setSurat] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const getDataFromAPI = (idSurat) => {
-    fetch(`https://equran.id/api/v2/surat/${idSurat}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setSurat(data.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-        setLoading(false);
-      });
+  const getDataFromAPI = async (idSurat) => {
+    try {
+      const res = await fetch(`https://equran.id/api/v2/surat/${idSurat}`);
+      const data = await res.json();
+      setSurat(data.data || null);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setSurat(null);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -25,39 +25,57 @@ const DetailSurat = () => {
     getDataFromAPI(id);
   }, [id]);
 
-  if (loading) return <div className="p-4">Memuat data Al-Quran...</div>;
-  if (!surat) return <div className="p-4">Surat tidak ditemukan.</div>;
+  if (loading) {
+    return <div className="p-4">Memuat data Al-Qur'an...</div>;
+  }
+
+  if (!surat) {
+    return <div className="p-4">Surat tidak ditemukan.</div>;
+  }
 
   return (
-    <div className="vh-100 overflow-auto p-3">
-      <h2>
-        {surat.namaLatin} ({surat.nama})
-      </h2>
-      <hr />
-      <div className="mb-4">
-        <p><strong>Jumlah Ayat:</strong> {surat.jumlahAyat}</p>
-        <p><strong>Arti:</strong> {surat.arti}</p>
-        <div className="alert alert-info">
-          <strong>Deskripsi:</strong> {parse(surat.deskripsi)}
+    <div className="container py-4">
+      <div className="card shadow-sm border-0 mb-4">
+        <div className="card-body">
+          <h2 className="mb-3">
+            {surat.namaLatin} ({surat.nama})
+          </h2>
+          <p className="mb-2">
+            <strong>Jumlah Ayat:</strong> {surat.jumlahAyat}
+          </p>
+          <p className="mb-3">
+            <strong>Arti:</strong> {surat.arti}
+          </p>
+          <div className="alert alert-info mb-0">
+            <strong>Deskripsi:</strong> {parse(surat.deskripsi)}
+          </div>
         </div>
       </div>
 
-      <ul className="list-group">
+      <div className="d-flex flex-column gap-3">
         {surat.ayat.map((ayat) => (
-          <li
-            key={ayat.nomorAyat}
-            className="list-group-item d-flex justify-content-between align-items-center p-3"
-          >
-            {/* Class arabic-text diterapkan di sini agar font Uthmanic aktif */}
-            <div className="arabic-text w-100 text-end pe-3">
-              {ayat.teksArab}
+          <div key={ayat.nomorAyat} className="card shadow-sm border-0">
+            <div className="card-body">
+              <div className="d-flex justify-content-between align-items-start gap-3 mb-3">
+                <span className="badge text-bg-primary rounded-pill">
+                  Ayat {ayat.nomorAyat}
+                </span>
+              </div>
+
+              <div className="arabic-text text-end mb-3">
+                {ayat.teksArab}
+              </div>
+
+              <p className="mb-1">
+                <strong>Latin:</strong> {ayat.teksLatin}
+              </p>
+              <p className="mb-0">
+                <strong>Arti:</strong> {ayat.teksIndonesia}
+              </p>
             </div>
-            <span className="badge text-bg-primary rounded-pill">
-              {ayat.nomorAyat}
-            </span>
-          </li>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };

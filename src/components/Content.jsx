@@ -1,13 +1,8 @@
-import React from "react";
-
 const Content = ({ children }) => {
   return (
-    <>
-      {/* Main Content */}
-      <div className="flex-grow-1 p-4">
-        <div>{children}</div>
-      </div>
-    </>
+    <main className="p-4 bg-light min-vh-100">
+      {children}
+    </main>
   );
 };
 

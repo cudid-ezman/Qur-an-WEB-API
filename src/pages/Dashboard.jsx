@@ -1,11 +1,13 @@
-import React from 'react';
-
 const Dashboard = () => {
   return (
-    <>
-      <h4>Selamat Datang</h4>
-      <p>di Aplikasi Qur'an Web</p>
-    </>
+    <div className="container py-4">
+      <div className="card shadow-sm border-0">
+        <div className="card-body">
+          <h2 className="mb-3">Selamat Datang</h2>
+          <p className="mb-0">di Aplikasi Qur'an Web</p>
+        </div>
+      </div>
+    </div>
   );
 };
 
